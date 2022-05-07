@@ -1,3 +1,5 @@
+// https://www.youtube.com/watch?v=EqV5wKD233c
+// https://github.com/awslabs/aws-lambda-rust-runtime
 use aws_config::meta::region::RegionProviderChain;
 use aws_sdk_dynamodb::Client;
 use aws_sdk_dynamodb::model::AttributeValue;
