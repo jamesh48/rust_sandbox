@@ -2,6 +2,7 @@
 // https://github.com/awslabs/aws-lambda-rust-runtime
 // use aws_sdk_dynamodb::error::ScanError;
 mod models;
+// use crate::models::single_event::StationEntry;
 use crate::models::single_event::SingleEvent;
 use crate::models::custom_event::CustomEvent;
 use aws_sdk_dynamodb::model::AttributeValue;
@@ -46,9 +47,23 @@ async fn handler(event: LambdaEvent<CustomEvent>) -> Result<JsonValue, LambdaErr
 
         // And deserialize them as strongly-typed data structures
         if let Some(items) = resp.items {
-            let all_events: Vec<SingleEvent> = from_items(items)?;
-            // println!("{:#?}", json!({"body": all_events}));
-            // let return_events = all_events.iter().map(|x| "works").collect::<Vec<&str>>();
+            let scan_items: Vec<SingleEvent> = from_items(items)?;
+            let all_events = scan_items
+                                .clone()
+                                .into_iter()
+                                .filter(|x| x.pk.to_string().starts_with("Event"))
+                                .collect::<Vec<SingleEvent>>();
+
+
+
+            let stations_list = scan_items
+                                    .clone()
+                                    .into_iter()
+                                    .filter(|x| x.pk.to_string().starts_with("Station"))
+                                    .collect::<Vec<SingleEvent>>();
+
+            // println!("{:#?}", json!(all_events));
+            println!("{:#?}", json!(stations_list));
             println!("Got {} events", all_events.len());
             return Ok(json!(all_events));
         }
@@ -58,9 +73,6 @@ async fn handler(event: LambdaEvent<CustomEvent>) -> Result<JsonValue, LambdaErr
             .item("PK", AttributeValue::S(String::from(uuid)))
             .item("first_name", AttributeValue::S(String::from(event.first_name)))
             .item("last_name", AttributeValue::S(String::from(event.last_name)));
-            // .item("eventCategory", AttributeValue::S(String::from(event.eventCategory)))
-            // .item("severity", AttributeValue::S(String::from(event.severity)))
-            // .item("headline", AttributeValue::S(String::from(event.headline)));
 
         request.send().await?;
         return  Ok(json!({ "message": "Record written!".to_string(), "request_id": _context.request_id }))
