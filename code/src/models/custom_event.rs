@@ -9,5 +9,6 @@ pub struct CustomEvent {
     pub status: String,
     pub step: String,
     pub event_type: String,
-    pub command: String
+    pub command: String,
+    pub read_by: String
 }

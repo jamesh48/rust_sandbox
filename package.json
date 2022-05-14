@@ -1,0 +1,22 @@
+{
+  "name": "rust_on_aws",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd ./code && source ./rust_lambda_helpers.zsh && manualBuild",
+    "deploy": "cd ./cdk_wrapper && cdk deploy",
+    "launch": "npm run build && cd .. && npm run deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamesh48/rust_sandbox.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jamesh48/rust_sandbox/issues"
+  },
+  "homepage": "https://github.com/jamesh48/rust_sandbox#readme"
+}

@@ -5,10 +5,9 @@ mod models;
 // use crate::models::single_event::StationEntry;
 use crate::models::single_event::SingleEvent;
 use crate::models::custom_event::CustomEvent;
-use aws_sdk_dynamodb::model::AttributeValue;
+use aws_sdk_dynamodb::{Client, model::{ AttributeValue }};
 use serde_dynamo::aws_sdk_dynamodb_0_0_25_alpha::from_items;
 use aws_config::meta::region::RegionProviderChain;
-use aws_sdk_dynamodb::{Client};
 use serde::{Serialize};
 use lambda_runtime::{service_fn, LambdaEvent, Error as LambdaError};
 use serde_json::{json, Value as JsonValue};
@@ -80,6 +79,9 @@ async fn handler(event: LambdaEvent<CustomEvent>) -> Result<JsonValue, LambdaErr
             .item("status", AttributeValue::S(String::from(event.status)))
             .item("step", AttributeValue::S(String::from(event.step)))
             .item("eventType", AttributeValue::S(String::from(event.event_type.clone())))
+            .item("readBy", AttributeValue::L([
+                AttributeValue::S(String::from(event.read_by))
+            ].to_vec()))
             .item("headline", AttributeValue::S(String::from(event.headline)));
 
         request.send().await?;
