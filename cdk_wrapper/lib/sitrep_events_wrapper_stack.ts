@@ -75,6 +75,7 @@ export class SitrepEventsWrapperStack extends Stack {
             \"command\": $input.json('$.command'),\r\n\
             \"headline\": $input.json('$.headline'),\r\n\
             \"event_type\": $input.json('$.eventType'),\r\n\
+            \"read_by\": $input.json('$.readBy'),\r\n\
             \"severity\": $input.json('$.severity'),\r\n\
             \"scope\": $input.json('$.scope'),\r\n\
             \"status\": $input.json('$.status'),\r\n\
