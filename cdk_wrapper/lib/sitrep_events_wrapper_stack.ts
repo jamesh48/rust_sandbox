@@ -57,10 +57,7 @@ export class SitrepEventsWrapperStack extends Stack {
       requestTemplates: {
         "application/json":
           '{\r\n\
-            "command": "$input.params(\'command\')",\r\n\
-            "status": "$input.params(\'status\')",\r\n\
-            "event_type": "$input.params(\'eventType\')",\r\n\
-            "headline": "$input.params(\'headline\')"\r\n\
+            "command": "$input.params(\'command\')"\r\n\
           }',
       },
       integrationResponses: [
@@ -78,7 +75,10 @@ export class SitrepEventsWrapperStack extends Stack {
             \"command\": $input.json('$.command'),\r\n\
             \"headline\": $input.json('$.headline'),\r\n\
             \"event_type\": $input.json('$.eventType'),\r\n\
-            \"status\": $input.json('$.status')\r\n\
+            \"severity\": $input.json('$.severity'),\r\n\
+            \"scope\": $input.json('$.scope'),\r\n\
+            \"status\": $input.json('$.status'),\r\n\
+            \"step\": $input.json('$.step')\r\n\
           }",
       },
       passthroughBehavior: PassthroughBehavior.WHEN_NO_TEMPLATES,

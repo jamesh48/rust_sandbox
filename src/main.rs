@@ -30,7 +30,6 @@ async fn main() -> Result<(), LambdaError> {
 }
 
 async fn handler(event: LambdaEvent<CustomEvent>) -> Result<JsonValue, LambdaError> {
-    let uuid = Uuid::new_v4().to_string();
     let region_provider = RegionProviderChain::default_provider()
         .or_else("us-west-1");
     let config = aws_config::from_env().region(region_provider).load().await;
@@ -70,12 +69,17 @@ async fn handler(event: LambdaEvent<CustomEvent>) -> Result<JsonValue, LambdaErr
         }
     } else if event.command == "postEvent" {
         let sk = utilities::time_utils::handle_time();
+        let uuid = Uuid::new_v4().to_string();
+        let pk = utilities::string_utils::handle_pk(event.event_type.clone(), uuid);
         let request = client.put_item()
             .table_name("sitrep-events")
-            .item("PK", AttributeValue::S(String::from(uuid)))
+            .item("PK", AttributeValue::S(pk.clone()))
             .item("SK", AttributeValue::S(sk.clone()))
+            .item("scope", AttributeValue::S(String::from(event.scope)))
+            .item("severity", AttributeValue::S(String::from(event.severity)))
             .item("status", AttributeValue::S(String::from(event.status)))
-            .item("eventType", AttributeValue::S(String::from(event.event_type)))
+            .item("step", AttributeValue::S(String::from(event.step)))
+            .item("eventType", AttributeValue::S(String::from(event.event_type.clone())))
             .item("headline", AttributeValue::S(String::from(event.headline)));
 
         request.send().await?;
