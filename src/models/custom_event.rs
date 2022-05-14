@@ -3,7 +3,8 @@ use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
 pub struct CustomEvent {
-    pub first_name: String,
-    pub last_name: String,
+    pub status: String,
+    pub headline: String,
+    pub event_type: String,
     pub command: String
 }

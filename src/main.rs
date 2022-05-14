@@ -13,6 +13,7 @@ use serde::{Serialize};
 use lambda_runtime::{service_fn, LambdaEvent, Error as LambdaError};
 use serde_json::{json, Value as JsonValue};
 use uuid::Uuid;
+mod utilities;
 
 // type Result<T, E = Box<dyn std::error::Error + Send + Sync>> = std::result::Result<T, E>;
 
@@ -31,7 +32,7 @@ async fn main() -> Result<(), LambdaError> {
 async fn handler(event: LambdaEvent<CustomEvent>) -> Result<JsonValue, LambdaError> {
     let uuid = Uuid::new_v4().to_string();
     let region_provider = RegionProviderChain::default_provider()
-        .or_else("us-east-1");
+        .or_else("us-west-1");
     let config = aws_config::from_env().region(region_provider).load().await;
     let client = Client::new(&config);
 
@@ -41,7 +42,7 @@ async fn handler(event: LambdaEvent<CustomEvent>) -> Result<JsonValue, LambdaErr
     if event.command == "getAllEvents" {
         let resp = client
                     .scan()
-                    .table_name("events")
+                    .table_name("sitrep-events")
                     .send()
                     .await?;
 
@@ -64,18 +65,25 @@ async fn handler(event: LambdaEvent<CustomEvent>) -> Result<JsonValue, LambdaErr
 
             // println!("{:#?}", json!(all_events));
             println!("{:#?}", json!(stations_list));
-            println!("Got {} events", all_events.len());
+            println!("Got {} sitrep-events", all_events.len());
             return Ok(json!(all_events));
         }
     } else if event.command == "postEvent" {
+        let sk = utilities::time_utils::handle_time();
         let request = client.put_item()
-            .table_name("events")
+            .table_name("sitrep-events")
             .item("PK", AttributeValue::S(String::from(uuid)))
-            .item("first_name", AttributeValue::S(String::from(event.first_name)))
-            .item("last_name", AttributeValue::S(String::from(event.last_name)));
+            .item("SK", AttributeValue::S(sk.clone()))
+            .item("status", AttributeValue::S(String::from(event.status)))
+            .item("eventType", AttributeValue::S(String::from(event.event_type)))
+            .item("headline", AttributeValue::S(String::from(event.headline)));
 
         request.send().await?;
-        return  Ok(json!({ "message": "Record written!".to_string(), "request_id": _context.request_id }))
+        return  Ok(json!({
+                            "message": "Record written!".to_string(),
+                            "request_id": _context.request_id,
+                            "SK": sk.clone()
+                        }))
     }
 
     return Ok(json!({ "error": "there was an error" }));
