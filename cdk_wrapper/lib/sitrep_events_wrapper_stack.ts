@@ -1,4 +1,5 @@
 require("dotenv").config({ path: "./.env" });
+console.log(process.env.RELEASE_FILE);
 // prettier-ignore
 import {
   Stack,
@@ -72,8 +73,10 @@ export class SitrepEventsWrapperStack extends Stack {
       requestTemplates: {
         "application/json":
           "{\r\n\
+            \"carriers\": $input.json('$.carriers'),\r\n\
             \"command\": $input.json('$.command'),\r\n\
             \"headline\": $input.json('$.headline'),\r\n\
+            \"event_category\": $input.json('$.category'),\r\n\
             \"event_type\": $input.json('$.eventType'),\r\n\
             \"read_by\": $input.json('$.readBy'),\r\n\
             \"severity\": $input.json('$.severity'),\r\n\
