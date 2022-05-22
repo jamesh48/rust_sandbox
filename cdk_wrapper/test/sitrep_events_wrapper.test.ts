@@ -5,6 +5,8 @@
 // example test. To run these tests, uncomment this file along with the
 // example resource in lib/cdk_wrapper-stack.ts
 test("SQS Queue Created", () => {
+  //
+  //
   //   const app = new cdk.App();
   //     // WHEN
   //   const stack = new CdkWrapper.SitrepEventsWrapperStack(app, 'MyTestStack');
