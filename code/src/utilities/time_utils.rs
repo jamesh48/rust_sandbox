@@ -1,4 +1,4 @@
-use chrono::{Utc, Datelike};
+use chrono::{Datelike, Utc};
 
 pub fn handle_time() -> String {
   let now = Utc::now();

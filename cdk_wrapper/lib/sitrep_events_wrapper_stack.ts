@@ -58,7 +58,10 @@ export class SitrepEventsWrapperStack extends Stack {
       requestTemplates: {
         "application/json":
           '{\r\n\
-            "command": "$input.params(\'command\')"\r\n\
+            "command": "$input.params(\'command\')",\r\n\
+            "get_object_params": {\r\n\
+              "key": "$input.params(\'key\')"\r\n\
+            }\r\n\
           }',
       },
       integrationResponses: [
@@ -72,21 +75,26 @@ export class SitrepEventsWrapperStack extends Stack {
       proxy: false,
       requestTemplates: {
         "application/json":
-          "{\r\n\
-            \"carriers\": $input.json('$.carriers'),\r\n\
-            \"command\": $input.json('$.command'),\r\n\
-            \"headline\": $input.json('$.headline'),\r\n\
-            \"event_category\": $input.json('$.category'),\r\n\
-            \"event_type\": $input.json('$.eventType'),\r\n\
-            \"read_by\": $input.json('$.readBy'),\r\n\
-            \"severity\": $input.json('$.severity'),\r\n\
-            \"scope\": $input.json('$.scope'),\r\n\
-            \"status\": $input.json('$.status'),\r\n\
-            \"step\": $input.json('$.step')\r\n\
-          }",
+          '{\r\n\
+            "command": $input.json(\'$.command\'),\r\n\
+            "post_event_params": {\r\n\
+              "carriers": $input.json(\'$.carriers\'),\r\n\
+              "headline": $input.json(\'$.headline\'),\r\n\
+              "event_category": $input.json(\'$.category\'),\r\n\
+              "event_type": $input.json(\'$.eventType\'),\r\n\
+              "read_by": $input.json(\'$.readBy\'),\r\n\
+              "severity": $input.json(\'$.severity\'),\r\n\
+              "scope": $input.json(\'$.scope\'),\r\n\
+              "status": $input.json(\'$.status\'),\r\n\
+              "step": $input.json(\'$.step\')\r\n\
+            }\r\n\
+          }',
       },
       passthroughBehavior: PassthroughBehavior.WHEN_NO_TEMPLATES,
-      integrationResponses: [{ statusCode: "200" }],
+      integrationResponses: [
+        { statusCode: "200" },
+        { statusCode: "404", selectionPattern: "^[404].*" },
+      ],
     });
 
     sitrepEventItems.addMethod("GET", sitrepEventsGETIntegration, {
@@ -103,7 +111,7 @@ export class SitrepEventsWrapperStack extends Stack {
 
     sitrepEventItems.addMethod("POST", sitrepEventsPOSTIntegration, {
       apiKeyRequired: false,
-      methodResponses: [{ statusCode: "200" }],
+      methodResponses: [{ statusCode: "200" }, { statusCode: "404" }],
     });
   }
 }
