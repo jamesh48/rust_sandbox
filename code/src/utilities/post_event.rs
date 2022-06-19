@@ -1,7 +1,9 @@
+use crate::models::input_params::Description;
 use crate::models::input_params::PostEventParams;
 use crate::utilities::{string_utils::handle_pk, time_utils::handle_time};
 use aws_sdk_dynamodb::{model::AttributeValue, Client};
 use lambda_runtime::{Context, Error as LambdaError};
+use serde_dynamo::aws_sdk_dynamodb_0_0_25_alpha::to_item;
 use serde_json::{json, Value as JsonValue};
 use uuid::Uuid;
 
@@ -13,6 +15,14 @@ pub async fn post_event(
   let sk = handle_time();
   let uuid = Uuid::new_v4().to_string();
   let pk = handle_pk(post_event_params.event_type.clone(), uuid);
+
+  let description = Description {
+    text: post_event_params.description,
+    version: 1,
+    user: "v859656".to_string(),
+  };
+  let description_item = to_item(description)?;
+
   let request = client
     .put_item()
     .table_name("sitrep-events")
@@ -21,6 +31,10 @@ pub async fn post_event(
     .item(
       "dates",
       AttributeValue::S(String::from(post_event_params.dates)),
+    )
+    .item(
+      "descriptions",
+      AttributeValue::L([AttributeValue::M(description_item)].to_vec()),
     )
     .item(
       "eventCategory",

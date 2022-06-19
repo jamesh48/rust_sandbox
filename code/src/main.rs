@@ -5,6 +5,7 @@ mod utilities;
 use crate::models::input_params::InputParams;
 use crate::utilities::{
     get_all_events::get_all_events, get_object::get_object, post_event::post_event,
+    update_event::update_event,
 };
 use aws_config::meta::region::RegionProviderChain;
 use aws_sdk_dynamodb::Client;
@@ -31,6 +32,11 @@ async fn handler(event: LambdaEvent<InputParams>) -> Result<JsonValue, LambdaErr
     if event.command == "getAllEvents" {
         let response_json = get_all_events(client).await;
         return response_json;
+    } else if event.command == "updateEvent" {
+        if let Some(update_event_params) = event.post_event_params {
+            let response_json = update_event(update_event_params, client, context).await;
+            return response_json;
+        }
     } else if event.command == "postEvent" {
         if let Some(post_event_params) = event.post_event_params {
             let response_json = post_event(post_event_params, client, context).await;

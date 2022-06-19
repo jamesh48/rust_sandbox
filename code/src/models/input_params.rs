@@ -1,9 +1,19 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize)]
+pub struct Description {
+    pub text: String,
+    pub user: String,
+    pub version: u8,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct PostEventParams {
+    pub pk: Option<String>,
+    pub sk: Option<String>,
     pub carriers: Vec<String>,
     pub dates: String,
+    pub description: String,
     pub event_category: String,
     pub headline: String,
     pub scope: String,

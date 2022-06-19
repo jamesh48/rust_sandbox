@@ -1,5 +1,5 @@
-use serde::{Serialize, Deserialize};
-use serde_json::{ Value as JsonValue};
+use serde::{Deserialize, Serialize};
+use serde_json::Value as JsonValue;
 
 // #[derive(Deserialize, Serialize, Debug)]
 // pub struct StationEntry {
@@ -14,8 +14,6 @@ use serde_json::{ Value as JsonValue};
 //   #[serde(rename = "customerImpact")]
 //   pub customer_impact: Vec<String>,
 // }
-
-
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct SingleEvent {
@@ -38,7 +36,7 @@ pub struct SingleEvent {
   #[serde(rename = "files")]
   pub files: Option<Vec<String>>,
   #[serde(rename = "descriptions")]
-  pub descriptions: Option<Vec<String>>,
+  pub descriptions: Vec<JsonValue>,
   #[serde(rename = "headline")]
   pub headline: Option<String>,
   #[serde(rename = "impacts")]
@@ -73,7 +71,7 @@ pub struct SingleEvent {
   #[serde(rename = "weatherUpdates")]
   pub weather_updates: Option<Vec<String>>,
   #[serde(rename = "impactKeys")]
-  pub impact_keys: Option<Vec<String>>
+  pub impact_keys: Option<Vec<String>>,
 }
 
 // #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -83,7 +81,3 @@ pub struct SingleEvent {
 //   pub impacts: JsonValue,
 //   pub label: String,
 // }
-
-
-
-

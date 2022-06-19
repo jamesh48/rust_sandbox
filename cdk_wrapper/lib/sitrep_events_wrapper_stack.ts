@@ -80,7 +80,10 @@ export class SitrepEventsWrapperStack extends Stack {
             "post_event_params": {\r\n\
               "carriers": $input.json(\'$.carriers\'),\r\n\
               "dates": $input.json(\'$.dates\'),\r\n\
+              "description": $input.json(\'$.description\'),\r\n\
               "headline": $input.json(\'$.headline\'),\r\n\
+              "pk": $input.json(\'$.pk\'),\r\n\
+              "sk": $input.json(\'$.sk\'),\r\n\
               "event_category": $input.json(\'$.category\'),\r\n\
               "event_type": $input.json(\'$.eventType\'),\r\n\
               "read_by": $input.json(\'$.readBy\'),\r\n\
