@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PostEventParams {
     pub carriers: Vec<String>,
+    pub dates: String,
     pub event_category: String,
     pub headline: String,
     pub scope: String,

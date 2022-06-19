@@ -19,6 +19,10 @@ pub async fn post_event(
     .item("PK", AttributeValue::S(pk.clone()))
     .item("SK", AttributeValue::S(sk.clone()))
     .item(
+      "dates",
+      AttributeValue::S(String::from(post_event_params.dates)),
+    )
+    .item(
       "eventCategory",
       AttributeValue::S(String::from(post_event_params.event_category)),
     )
