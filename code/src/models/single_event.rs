@@ -17,6 +17,11 @@ use serde_json::Value as JsonValue;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct SingleEvent {
+  pub event: AirportEvent,
+}
+
+#[derive(Deserialize, Serialize, Debug, Clone)]
+pub struct AirportEvent {
   #[serde(rename = "PK")]
   pub pk: String,
   #[serde(rename = "SK")]

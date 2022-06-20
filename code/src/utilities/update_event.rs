@@ -1,5 +1,5 @@
 use crate::models::input_params::{Description, PostEventParams};
-use crate::models::single_event::SingleEvent;
+use crate::models::single_event::AirportEvent;
 use crate::utilities::get_descriptions_for_event::get_descriptions_for_event;
 use crate::LambdaError;
 use aws_sdk_dynamodb::{model::AttributeValue, Client};
@@ -16,7 +16,7 @@ pub async fn update_event(
     if let Some(existing_sk) = update_event_params.sk {
       let resp = client.scan().table_name("sitrep-events").send().await?;
       if let Some(items) = resp.items {
-        let scan_items: Vec<SingleEvent> = from_items(items)?;
+        let scan_items: Vec<AirportEvent> = from_items(items)?;
         let specific_event = scan_items
           .clone()
           .into_iter()
